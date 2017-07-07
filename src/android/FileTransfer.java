@@ -941,6 +941,7 @@ public class FileTransfer extends CordovaPlugin {
                         FileUtils filePlugin = (FileUtils) pm.getPlugin("File");
                         if (filePlugin != null) {
                             JSONObject fileEntry = filePlugin.getEntryForFile(file);
+                            fileEntry.put("responseHeaders", connection.getHeaderFields());
                             if (fileEntry != null) {
                                 result = new PluginResult(PluginResult.Status.OK, fileEntry);
                             } else {
