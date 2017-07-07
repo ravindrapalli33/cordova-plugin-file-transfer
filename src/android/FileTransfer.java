@@ -949,7 +949,7 @@ public class FileTransfer extends CordovaPlugin {
 
                             for (String k : hdrKeys) {
                                    if(k.equals("Content-Disposition") || k.equals("Content-Type")) {
-                                        fileEntry.put(k, hdrs.get(k));
+                                        fileEntry.put(k.replace('-','_'), hdrs.get(k));
                                    }
                             }
 
