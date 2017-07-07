@@ -216,6 +216,7 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
             entry.fullPath = result.fullPath;
             entry.filesystem = new FileSystem(result.filesystemName || (result.filesystem == window.PERSISTENT ? 'persistent' : 'temporary'));
             entry.nativeURL = result.nativeURL;
+            entry.responseHeaders = result.responseHeaders;
             successCallback(entry);
         }
     };
