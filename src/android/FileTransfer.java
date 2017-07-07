@@ -39,6 +39,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -941,7 +944,15 @@ public class FileTransfer extends CordovaPlugin {
                         FileUtils filePlugin = (FileUtils) pm.getPlugin("File");
                         if (filePlugin != null) {
                             JSONObject fileEntry = filePlugin.getEntryForFile(file);
-                            fileEntry.put("responseHeaders", connection.getHeaderFields());
+                            Map<String, List<String>> hdrs = connection.getHeaderFields();
+                            Set<String> hdrKeys = hdrs.keySet();
+
+                            for (String k : hdrKeys) {
+                                   if(k.equals("Content-Disposition") || k.equals("Content-Type")) {
+                                        fileEntry.put(k, hdrs.get(k));
+                                   }
+                            }
+
                             if (fileEntry != null) {
                                 result = new PluginResult(PluginResult.Status.OK, fileEntry);
                             } else {
