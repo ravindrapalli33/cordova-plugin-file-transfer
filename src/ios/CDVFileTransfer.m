@@ -636,7 +636,7 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
             self.targetFileHandle = nil;
             DLog(@"File Transfer Download success");
 
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self makeEntryForURL:self.targetURL]];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self.filePlugin self.responseHeaders makeEntryForURL:self.targetURL]];
         } else {
             downloadResponse = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
             if (downloadResponse == nil) {
@@ -725,8 +725,9 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
         self.responseCode = (int)[httpResponse statusCode];
         self.bytesExpected = [response expectedContentLength];
         self.responseHeaders = [httpResponse allHeaderFields];
-        self.Content_Disposition = [[(NSHTTPURLResponse*)response allHeaderFields] valueForKey:@"Content-Disposition"];
+        NSLog(@"%@",[[(NSHTTPURLResponse*)response allHeaderFields] valueForKey:@"Content-Disposition"]);
         if ((self.direction == CDV_TRANSFER_DOWNLOAD) && (self.responseCode == 200) && (self.bytesExpected == NSURLResponseUnknownLength)) {
+            self.responseHeaders = [[(NSHTTPURLResponse*)response allHeaderFields] valueForKey:@"Content-Disposition"];
             // Kick off HEAD request to server to get real length
             // bytesExpected will be updated when that response is returned
             self.entityLengthRequest = [[CDVFileTransferEntityLengthRequest alloc] initWithOriginalRequest:connection.currentRequest andDelegate:self];
