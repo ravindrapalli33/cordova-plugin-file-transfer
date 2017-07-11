@@ -640,7 +640,7 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
             NSMutableDictionary* downloadResult = [filePluginDict mutableCopy];
             [downloadResult setObject:[self.responseHeaders valueForKey:@"Content-Disposition"] forKey:@"Content_Disposition"];
             [downloadResult setObject:[self.responseHeaders valueForKey:@"Content-Type"] forKey:@"Content_Type"];
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[downloadResult]];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:downloadResult];
         } else {
             downloadResponse = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
             if (downloadResponse == nil) {
