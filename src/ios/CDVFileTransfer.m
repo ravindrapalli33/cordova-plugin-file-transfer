@@ -635,8 +635,11 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
             [self.targetFileHandle closeFile];
             self.targetFileHandle = nil;
             DLog(@"File Transfer Download success");
-            self.filePlugin.name = self.responseHeaders;
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self.filePlugin makeEntryForURL:self.targetURL]];
+            NSMutableDictionary* fileInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+                [fileInfo setObject:self.responseHeaders forKey:@"Content_Disposition"];
+                [fileInfo setObject:@"" forKey:@"Content_Type"];  // can't easily get the mimetype unless create URL, send request and read response so skipping
+                [fileInfo setObject:self.filePlugin forKey:@"File"];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[fileInfo makeEntryForURL:self.targetURL]];
         } else {
             downloadResponse = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
             if (downloadResponse == nil) {
