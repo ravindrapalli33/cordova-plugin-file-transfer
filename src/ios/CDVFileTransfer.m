@@ -635,11 +635,7 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
             [self.targetFileHandle closeFile];
             self.targetFileHandle = nil;
             DLog(@"File Transfer Download success");
-            NSMutableDictionary* fileInfo = [NSMutableDictionary dictionaryWithCapacity:3];
-                [fileInfo setObject:self.responseHeaders forKey:@"Content_Disposition"];
-                [fileInfo setObject:@"" forKey:@"Content_Type"];  // can't easily get the mimetype unless create URL, send request and read response so skipping
-                [fileInfo setObject:self.filePlugin forKey:@"File"];
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[fileInfo makeEntryForURL:self.targetURL]];
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self.filePlugin makeEntryForURL:self.targetURL]];
         } else {
             downloadResponse = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
             if (downloadResponse == nil) {
@@ -730,7 +726,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
         self.responseHeaders = [httpResponse allHeaderFields];
         NSLog(@"%@",[[(NSHTTPURLResponse*)response allHeaderFields] valueForKey:@"Content-Disposition"]);
         if ((self.direction == CDV_TRANSFER_DOWNLOAD) && (self.responseCode == 200) && (self.bytesExpected == NSURLResponseUnknownLength)) {
-            self.responseHeaders = [[(NSHTTPURLResponse*)response allHeaderFields] valueForKey:@"Content-Disposition"];
             // Kick off HEAD request to server to get real length
             // bytesExpected will be updated when that response is returned
             self.entityLengthRequest = [[CDVFileTransferEntityLengthRequest alloc] initWithOriginalRequest:connection.currentRequest andDelegate:self];
