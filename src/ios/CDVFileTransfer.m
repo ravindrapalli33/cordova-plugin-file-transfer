@@ -637,16 +637,10 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
             DLog(@"File Transfer Download success");
 
             NSDictionary* filePluginDict = [self.filePlugin makeEntryForURL:self.targetURL];
-            NSLog(@"Dictionary %@", filePluginDict);
             NSMutableDictionary* downloadResult = [filePluginDict mutableCopy];
-            NSLog(@"Mutable Dictionary %@", downloadResult);
             [downloadResult setObject:[self.responseHeaders valueForKey:@"Content-Disposition"] forKey:@"Content_Disposition"];
             [downloadResult setObject:[self.responseHeaders valueForKey:@"Content-Type"] forKey:@"Content_Type"];
-            NSLog(@"Contenty-Type %@", [self.responseHeaders valueForKey:@"Content-Type"]);
-            NSLog(@"Contenty-Disposition %@", [self.responseHeaders valueForKey:@"Content-Disposition"]);
-            NSLog(@"After values added to mutable dictiionary %@", downloadResult);
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:downloadResult];
-            NSLog(@"Result %@", result);
         } else {
             downloadResponse = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
             if (downloadResponse == nil) {
@@ -751,7 +745,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
     if ((self.direction == CDV_TRANSFER_DOWNLOAD) && (self.responseCode >= 200) && (self.responseCode < 300)) {
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
         self.responseHeaders = [httpResponse allHeaderFields];
-        NSLog(@"Response Headers %@", self.responseHeaders);
 
         // Download response is okay; begin streaming output to file
         NSString *filePath = [self targetFilePath];
