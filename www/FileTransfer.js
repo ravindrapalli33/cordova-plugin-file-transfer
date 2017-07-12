@@ -216,8 +216,11 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
             entry.fullPath = result.fullPath;
             entry.filesystem = new FileSystem(result.filesystemName || (result.filesystem == window.PERSISTENT ? 'persistent' : 'temporary'));
             entry.nativeURL = result.nativeURL;
+            console.log('Name: ' + result.name);
             entry.Content_Disposition = result.Content_Disposition;
+            console.log('Content_Disposition: ' + result.Content_Disposition);
             entry.Content_Type = result.Content_Type;
+            console.log('Content_Type: ' + result.Content_Type);
             successCallback(entry);
         }
     };
